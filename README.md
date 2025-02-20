@@ -1,1 +1,1 @@
-# GPE205
+This repository holds all the project files for my unity project. That is all.
