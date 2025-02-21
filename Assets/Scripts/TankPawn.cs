@@ -7,7 +7,7 @@ public class TankPawn : ParentPawn
     public Mover mover;
 
     // Call before first frame update
-    void Start()
+    public void Start()
     {
         mover = GetComponent<Mover>();
     }
