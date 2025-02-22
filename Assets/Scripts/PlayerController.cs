@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[System.Serializable]
 public class PlayerController : Controller
 {
     // Keyboard KeyCodes
@@ -8,11 +10,37 @@ public class PlayerController : Controller
     public KeyCode moveDown;
     public KeyCode moveRight;
     
-    // Start Function
+    // Start before first frame update 
     public override void Start()
     {
-        base.Start();
+        // if GameManager exists
+        if (GameManager.instance != null)
+        {
+            // if it tracks the players
+            if (GameManager.instance.players != null)
+            {
+                // Add / Register to GameManager
+                GameManager.instance.players.Add(this);
+            }
+            // Run Start function from parent class
+            base.Start();
+        }
     }
+
+    public void OnDestroy()
+    {
+        // if GameManager exists 
+        if (GameManager.instance != null)
+        {
+            // If it tracks the players 
+            if (GameManager.instance.players != null)
+            {
+                // Remove / Deregister from GameManager
+                GameManager.instance.players.Remove(this);
+            }
+        }
+    }
+    
 
     // Update Function 
     public override void Update()
