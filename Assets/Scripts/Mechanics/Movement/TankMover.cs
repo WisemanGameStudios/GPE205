@@ -15,6 +15,6 @@ public class TankMover : Mover
     public override void Move(Vector3 direction, float speed)
     {
         Vector3 moveVector = direction.normalized * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + moveVector);
+        rb.MovePosition(rb.position + moveVector);
     }
 }

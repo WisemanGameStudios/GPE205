@@ -48,12 +48,14 @@ public class GameManager : MonoBehaviour
 
         // get the pawn and player controller component
         Controller newController = newPlayer.GetComponent<Controller>();
-        ParentPawn newPlayerPawn = newPawn.GetComponent<ParentPawn>();
+        Pawn newPlayerPawn = newPawn.GetComponent<Pawn>();
 
         // Create Controller 
         newController.pawn = newPlayerPawn;
 
        }
+    
+    
 
     // gameObject Prefabs
     public GameObject playercontrolPrefab;

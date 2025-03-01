@@ -1,20 +1,21 @@
 
 using UnityEngine;
+using UnityEngine.Audio;
 
-public class TankPawn : ParentPawn
+public class TankPawn : Pawn
 {
-    // Mover Variable 
-    public Mover mover;
-
+    
     // Call before first frame update
-    public virtual void Start()
+    public override void Start()
     {
-        mover = GetComponent<Mover>();
+        base.Start();
     }
-
+    
+    
+    // Movement Functions
     public override void MoveUp()
     {
-       mover.Move(transform.forward, moveSpeed);
+        mover.Move(transform.forward, moveSpeed);
     }
 
     public override void MoveDown()
@@ -24,12 +25,12 @@ public class TankPawn : ParentPawn
 
     public override void RotateRight()
     {
-        transform.Rotate(0, -moveSpeed * Time.deltaTime, 0);
+        mover.Rotate(turnSpeed);
     }
 
     public override void RotateLeft()
     {
-        transform.Rotate(0, moveSpeed * Time.deltaTime, 0);
+        mover.Rotate(-turnSpeed);
     }
 }
 

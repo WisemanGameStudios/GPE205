@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     // Pawn Variable
-    public ParentPawn pawn;
+    public Pawn pawn;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public virtual void Start()
