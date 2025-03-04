@@ -9,17 +9,19 @@ public class PlayerController : Controller
     public KeyCode moveLeft = KeyCode.A;
     public KeyCode moveDown = KeyCode.S;
     public KeyCode moveRight = KeyCode.D;
+    public KeyCode shootKey = KeyCode.Space;
 
-    // Audio
+    // Audio Variables 
     private AudioSource _audioSource;
-    public AudioClip moveSound; // Assign in Unity Inspector
+    public AudioClip moveSound;
+    public AudioClip shootSound;
 
     private bool _isMoving = false;
 
     // Start before first frame update 
     public override void Start()
     {
-        // Get or Add the AudioSource component (Unity 6 way)
+        // Get or Add the AudioSource component
         if (!TryGetComponent(out _audioSource))
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
@@ -69,28 +71,39 @@ public class PlayerController : Controller
         if (Input.GetKey(moveUp))
         {
             pawn.MoveUp();
+            pawn.MakeNoise();
             keyPressed = true;
         }
 
         if (Input.GetKey(moveLeft))
         {
             pawn.RotateLeft();
+            pawn.MakeNoise();
             keyPressed = true;
         }
 
         if (Input.GetKey(moveDown))
         {
             pawn.MoveDown();
+            pawn.MakeNoise();
             keyPressed = true;
         }
 
         if (Input.GetKey(moveRight))
         {
             pawn.RotateRight();
+            pawn.MakeNoise();
             keyPressed = true;
         }
 
-        // Handle looping sound
+        if (Input.GetKeyDown(shootKey))
+        {
+           pawn.Shoot();
+           pawn.MakeNoise();
+           PlayShootSound();
+        }
+
+        // Handle loop
         if (keyPressed)
         {
             if (!_isMoving)
@@ -107,6 +120,11 @@ public class PlayerController : Controller
                 _isMoving = false;
             }
         }
+
+        if (!Input.GetKey(moveUp) && !Input.GetKey(moveDown) && !Input.GetKey(moveLeft) && !Input.GetKey(moveRight) && Input.GetKeyDown(shootKey))
+        {
+            pawn.StopNoise();
+        }
     }
 
     // Play looping movement sound
@@ -114,7 +132,7 @@ public class PlayerController : Controller
     {
         if (_audioSource != null && moveSound != null)
         {
-            if (!_audioSource.isPlaying) // Prevent multiple starts
+            if (!_audioSource.isPlaying) // Prevent multiple
             {
                 _audioSource.Play();
             }
@@ -127,6 +145,14 @@ public class PlayerController : Controller
         if (_audioSource != null && _audioSource.isPlaying)
         {
             _audioSource.Stop();
+        }
+    }
+    
+    private void PlayShootSound()
+    {
+        if (_audioSource != null && shootSound != null)
+        {
+            _audioSource.PlayOneShot(shootSound);
         }
     }
 }

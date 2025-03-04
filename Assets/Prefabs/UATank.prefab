@@ -162,7 +162,7 @@ Transform:
   m_GameObject: {fileID: 7935488460561222571}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 1.19}
+  m_LocalPosition: {x: 0, y: 0.6, z: 1.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -277,10 +277,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fde5e3ed1c09764690662a453f5d09b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireForce: 400
+  fireRate: 2
+  damageDone: 25
+  shellLife: 1.5
   moveSpeed: 5
-  turnSpeed: 600
-  mover: {fileID: 3353257878824358907}
-  audioSource: {fileID: 0}
+  turnSpeed: 100
+  mover: {fileID: 0}
+  shooter: {fileID: 0}
+  shellPrefab: {fileID: 806465967288384690, guid: 4d156aef76676f9458f3540984ac8118, type: 3}
 --- !u!114 &3353257878824358907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +359,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 7776b1a383c772641865eab98f24bf7d, type: 3}
   m_Resource: {fileID: 8300000, guid: 7776b1a383c772641865eab98f24bf7d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.222
+  m_Volume: 0.081
   m_Pitch: 1
   Loop: 0
   Mute: 0

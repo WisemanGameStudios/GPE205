@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -49,6 +50,11 @@ public class GameManager : MonoBehaviour
         // get the pawn and player controller component
         Controller newController = newPlayer.GetComponent<Controller>();
         Pawn newPlayerPawn = newPawn.GetComponent<Pawn>();
+        
+        // Get the noise maker component 
+        newPawn.AddComponent<NoiseMaker>();
+        newPlayerPawn.noiseMaker = newPawn.GetComponent<NoiseMaker>();
+        newPlayerPawn.noiseMakerVolume = 3;
 
         // Create Controller 
         newController.pawn = newPlayerPawn;

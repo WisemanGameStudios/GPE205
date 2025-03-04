@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e69a4539b02fb43b5cb07c3cb659d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageDone: 0
+  damageDone: 5
   pawn: {fileID: 0}
 --- !u!82 &7939491982617242638
 AudioSource:
