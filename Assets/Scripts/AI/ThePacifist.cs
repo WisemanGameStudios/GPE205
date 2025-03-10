@@ -2,13 +2,14 @@ using UnityEngine;
 
 public class ThePacifist : AIController
 {
+    public override void Start()
+    {
+        base.Start(); // Ensure base AI initialization
+        defaultState = AIState.Patrol; // Ensure it starts in Patrol mode
+    }
+
     public override void ProcessInputs()
     {
-        if (IsCanSee(target) || IsCanHear(target))
-        {
-            Debug.Log("I'm too young to die!!!!!!!! Thank you!");
-            // Just Patrols
-            PatrollingState();
-        }
+        PatrollingState(); // Continue patrolling
     }
 }

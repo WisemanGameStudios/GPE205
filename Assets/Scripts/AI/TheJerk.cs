@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class TheJerk : AIController
 {
+    public override void Start()
+    {
+        base.Start(); // Call the base class Start() method
+        TargetPlayerOne(); // Automatically select the nearest target when spawned
+    }
+
     public override void ProcessInputs()
     {
-        if (target != null && IsCanSee(target) || IsCanHear(target))
-        {
-            ChangeState(AIState.Chase);
-            if (IsPlayerDistanceLessThan(target, attackDistance))
-            {
-                ChangeState(AIState.Attack);
-                Seeking(target);
-            }
-        }
+        ChangeState(AIState.Chase);
     }
 }
