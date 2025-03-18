@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 1326578998401910676}
   - component: {fileID: 831621945877292226}
   - component: {fileID: 2268874560729230975}
+  - component: {fileID: 4344959424983984815}
   m_Layer: 0
   m_Name: AITank
   m_TagString: Player
@@ -64,7 +65,7 @@ Transform:
   m_GameObject: {fileID: 5102119351138788779}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.47214508, y: -0.44306722, z: 1.7368021}
+  m_LocalPosition: {x: 0.47214508, y: -6.4724, z: 1.7368021}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -140,6 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseMakerVolume: 0
+  controller: {fileID: 0}
   fireForce: 400
   fireRate: 2
   damageDone: 6
@@ -237,6 +239,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
+  controller: {fileID: 0}
+  isPlayer: 0
+  healthBarPrefab: {fileID: 6932762830906374397, guid: 39994b5e3e23ee84c8bc7cf108344f76, type: 3}
+--- !u!114 &4344959424983984815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5102119351138788779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ffe8624221fe74389d274ff508649b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 0}
+  target: {fileID: 0}
+  offset: {x: 0, y: 2.5, z: 0}
 --- !u!1 &7634766821937980654
 GameObject:
   m_ObjectHideFlags: 0

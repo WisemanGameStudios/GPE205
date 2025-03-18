@@ -140,8 +140,8 @@ GameObject:
   - component: {fileID: 6826370437711578735}
   - component: {fileID: 8103599140923335125}
   - component: {fileID: 8848902597895433520}
-  - component: {fileID: -1443323629819724415}
   - component: {fileID: 7942779209799368644}
+  - component: {fileID: 5384225191720705995}
   m_Layer: 0
   m_Name: UATank
   m_TagString: Player
@@ -234,6 +234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseMakerVolume: 0
+  controller: {fileID: 0}
   fireForce: 400
   fireRate: 60
   damageDone: 25
@@ -314,8 +315,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7776b1a383c772641865eab98f24bf7d, type: 3}
-  m_Resource: {fileID: 8300000, guid: 7776b1a383c772641865eab98f24bf7d, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.081
   m_Pitch: 1
@@ -414,20 +415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 1150218541876108856}
---- !u!114 &-1443323629819724415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8795818533042465295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 968533541f843f64d9f8d9a1f408a914, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentHealth: 50
-  maxHealth: 100
 --- !u!114 &7942779209799368644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,3 +427,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d7a75cfb99f364dad9a1f1993e1889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5384225191720705995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8795818533042465295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968533541f843f64d9f8d9a1f408a914, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 0
+  controller: {fileID: 0}
+  isPlayer: 1
+  healthBarPrefab: {fileID: 6932762830906374397, guid: 39994b5e3e23ee84c8bc7cf108344f76, type: 3}

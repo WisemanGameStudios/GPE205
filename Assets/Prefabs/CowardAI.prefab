@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 6473075604528458142}
   - component: {fileID: 8330671204051721328}
   - component: {fileID: 5433610983672230182}
+  - component: {fileID: 4081520951455317575}
   m_Layer: 0
   m_Name: CowardAI
   m_TagString: Player
@@ -34,7 +35,7 @@ Transform:
   m_GameObject: {fileID: 2057979732328208753}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.47214508, y: -0.44306722, z: 1.7368021}
+  m_LocalPosition: {x: 0.47214508, y: -6.4724, z: 1.7368021}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -110,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseMakerVolume: 0
+  controller: {fileID: 0}
   fireForce: 400
   fireRate: 2
   damageDone: 6
@@ -207,6 +209,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
+  controller: {fileID: 0}
+  isPlayer: 0
+  healthBarPrefab: {fileID: 6932762830906374397, guid: 39994b5e3e23ee84c8bc7cf108344f76, type: 3}
 --- !u!114 &5433610983672230182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,15 +227,36 @@ MonoBehaviour:
   pawn: {fileID: 0}
   defaultState: 0
   target: {fileID: 0}
-  targetDistance: 0
+  targetDistance: 100
   attackDistance: 0
   minattackDistance: 0
-  waypontStopDistance: 0
-  fleeDistance: 0
-  minFleeDistance: 0
+  fleeDistance: 10
+  minFleeDistance: 8
   hearDistance: 0
   fieldOfView: 0
   waypoints: []
+--- !u!195 &4081520951455317575
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057979732328208753}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.9
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.9999999
+  m_BaseOffset: 0.99999994
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &8998548873915446301
 GameObject:
   m_ObjectHideFlags: 0

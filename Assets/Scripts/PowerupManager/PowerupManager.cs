@@ -7,8 +7,8 @@ using System.Collections.Generic;
 public class PowerupManager : MonoBehaviour
 {
     
-    public List<Powerup> powerups;
-    private List<Powerup> removePowerupsQueue;
+    public List<Powerup> powerups = new List<Powerup>();
+    private List<Powerup> removePowerupsQueue = new List<Powerup>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,6 +74,4 @@ public class PowerupManager : MonoBehaviour
         // Reset our temporary list
         removePowerupsQueue.Clear();
     }
-    
-    
 }

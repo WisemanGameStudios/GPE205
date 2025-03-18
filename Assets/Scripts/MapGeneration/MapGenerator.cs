@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using Unity.AI.Navigation; 
 
 public class MapGenerator : MonoBehaviour
 {
@@ -38,6 +40,9 @@ public class MapGenerator : MonoBehaviour
         // Start the Grid
         grid = new Room[cols, rows];
 
+        // List to store all NavMeshSurfaces
+        List<NavMeshSurface> surfaces = new List<NavMeshSurface>();
+        
         // For each grid row...
         for (int currentRow = 0; currentRow < rows; currentRow++) {
             
@@ -57,6 +62,15 @@ public class MapGenerator : MonoBehaviour
 
                 // Get the room object
                 Room tempRoom = tempRoomObj.GetComponent<Room>();
+                
+                // Ensure each room has a NavMeshSurface
+                NavMeshSurface navMeshSurface = tempRoomObj.GetComponent<NavMeshSurface>();
+                if (navMeshSurface == null)
+                {
+                    navMeshSurface = tempRoomObj.AddComponent<NavMeshSurface>();
+                    navMeshSurface.collectObjects = CollectObjects.Children;
+                }
+                surfaces.Add(navMeshSurface); // Store for later baking
                 
                 // Open the doors
                 // If we are on the bottom row, open the north door
@@ -96,5 +110,18 @@ public class MapGenerator : MonoBehaviour
                 grid[currentCol,currentRow] = tempRoom;
             }
         }
+        
+        // Bake NavMesh after all rooms are placed
+        BakeNavMesh(surfaces);
     }
+    
+    private void BakeNavMesh(List<NavMeshSurface> surfaces)
+    {
+        Debug.Log("Baking NavMesh...");
+        foreach (NavMeshSurface surface in surfaces)
+        {
+            surface.BuildNavMesh();
+        }
+    }
+
 }

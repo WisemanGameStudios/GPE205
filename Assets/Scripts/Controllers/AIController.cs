@@ -1,5 +1,4 @@
-using NUnit.Framework.Constraints;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,7 +18,6 @@ public class AIController : Controller
     public float targetDistance;
     public float attackDistance;
     public float minattackDistance;
-    public float waypontStopDistance;
     public float fleeDistance;
     public float minFleeDistance;
     public float hearDistance;
@@ -30,11 +28,31 @@ public class AIController : Controller
     public Transform[] waypoints;
     private float _lastStateChangeTime;
     private int currentWaypoint = 0;
+    protected NavMeshAgent navAgent;
     
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void Start()
     {
-       defaultState = AIState.Patrol;
+        base.Start(); 
+        defaultState = AIState.Patrol;
+
+        // Ensure NavMeshAgent Exists
+        navAgent = GetComponent<NavMeshAgent>();
+        
+        if (navAgent == null)
+        {
+            Debug.LogError(gameObject.name + " is missing a NavMeshAgent! Adding one now...");
+            navAgent = gameObject.AddComponent<NavMeshAgent>();
+        }
+
+        // Tweak movement settings
+        navAgent.speed = 3.5f;
+        navAgent.acceleration = 8f;
+        navAgent.angularSpeed = 120f;
+        navAgent.stoppingDistance = 0.5f; 
+        navAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        
     }
 
     // Update is called once per frame
@@ -42,6 +60,31 @@ public class AIController : Controller
     {
         ProcessInputs(); 
         base.Update();
+        
+        
+        if (defaultState == AIState.Patrol)
+        {
+            WanderRandomly();
+        }
+        else if (defaultState == AIState.Chase)
+        {
+            ChasingState();
+        }
+        else if (defaultState == AIState.Flee)
+        {
+            FleeingState();
+        }
+        
+        if (navAgent.velocity.magnitude > 0.1f) // Rotate if moving
+        {
+            // Get the direction AI is moving towards
+            Vector3 moveDirection = navAgent.velocity.normalized;
+
+            //  Make AI face the movement direction gradually
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+        
     }
 
     public override void ProcessInputs()
@@ -56,7 +99,7 @@ public class AIController : Controller
                 }
                 else
                 {
-                    PatrollingState();
+                    WanderRandomly();
                 }
                 // Check for transitions
                 if (IsPlayerDistanceLessThan(target, targetDistance))
@@ -121,9 +164,19 @@ public class AIController : Controller
 
     protected void ChasingState()
     {
-        // Seeking after targets
-        Debug.Log("Chasing target");
-        Seeking(target);
+        if (navAgent == null) 
+        {
+            Debug.LogError(gameObject.name + " NavMeshAgent is NULL in ChasingState!");
+            return;
+        }
+
+        if (target == null) 
+        {
+            Debug.LogWarning(gameObject.name + " has no target to chase.");
+            return;
+        }
+
+        navAgent.SetDestination(target.transform.position);
     }
 
     protected void AttackingState()
@@ -138,42 +191,75 @@ public class AIController : Controller
     protected void PatrollingState()
     {
         Debug.Log("Patrolling");
+        
         // If we have enough waypoints in the list to move to a current waypoint 
-        if (waypoints.Length > currentWaypoint)
+        if (waypoints.Length > 0)
         {
-            // Then seek that waypoint 
-            Seeking(waypoints[currentWaypoint]);
-            
-            // If we are close enough, increment to next waypoint
-            if (Vector3.Distance(pawn.transform.position, waypoints[currentWaypoint].position) <= waypontStopDistance)
+            if (navAgent.remainingDistance <= navAgent.stoppingDistance)
             {
-                currentWaypoint++;
+                currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
             }
-        }
-        else
-        {
-            RestartPatrol();
+            navAgent.SetDestination(waypoints[currentWaypoint].position);
         }
     }
 
     protected void FleeingState()
     {
         Debug.Log("Fleeing target");
-        // Find the vector away from the target
-        Vector3 vectorToTarget = target.transform.position - pawn.transform.position;
-        Vector3 vectorAwayFromTarget = -vectorToTarget.normalized; 
         
-        // Calculate flee destination
-        Vector3 fleeDestination = pawn.transform.position + (vectorAwayFromTarget * fleeDistance);
+        if (target == null) return;
 
-        // Move AI to flee destination
-        Seeking(fleeDestination);
+        // Find the vector away from target
+        Vector3 vectorToTarget = target.transform.position - transform.position;
+        Vector3 vectorAwayFromTarget = -vectorToTarget.normalized;
+        
+        // Set the flee distance
+        Vector3 fleeDestination = transform.position + (vectorAwayFromTarget * fleeDistance);
+        
+        // Flee from target
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(fleeDestination, out hit, fleeDistance, NavMesh.AllAreas))
+        {
+            navAgent.SetDestination(hit.position);
+        }
     }
     
 
-    protected void RestartPatrol()
+    protected void WanderRandomly()
     {
-        currentWaypoint = 0;
+        if (navAgent == null) 
+        {
+            Debug.LogError(gameObject.name + " NavMeshAgent is NULL in WanderRandomly!");
+            return;
+        }
+
+        if (navAgent.remainingDistance <= navAgent.stoppingDistance)
+        {
+            Vector3 randomPoint;
+            if (GetRandomNavMeshPoint(transform.position, 10f, out randomPoint))
+            {
+                navAgent.SetDestination(randomPoint);
+            }
+        }
+    }
+
+// Get a random point on the NavMesh
+    private bool GetRandomNavMeshPoint(Vector3 center, float range, out Vector3 result)
+    {
+        for (int i = 0; i < 10; i++) // Try 10 times to find a valid point
+        {
+            Vector3 randomPos = center + new Vector3(Random.Range(-range, range), 0, Random.Range(-range, range));
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPos, out hit, range, NavMesh.AllAreas))
+            {
+                result = hit.position;
+                return true;
+            }
+        }
+    
+        result = Vector3.zero;
+        return false;
     }
     
     
@@ -208,14 +294,14 @@ public class AIController : Controller
 
     protected bool IsPlayerDistanceLessThan(GameObject target, float distance)
     {
-        if (Vector3.Distance(pawn.transform.position, target.transform.position) < distance)
+        // Prevents crashes if `target` or `pawn` is missing
+        if (target == null || pawn == null) 
         {
-            return true;
-        }
-        else
-        {
+            Debug.LogWarning(gameObject.name + " - IsPlayerDistanceLessThan() called with a null target or pawn.");
             return false;
         }
+
+        return Vector3.Distance(pawn.transform.position, target.transform.position) < distance;
     }
 
     public virtual void ChangeState(AIState newState)
@@ -228,15 +314,11 @@ public class AIController : Controller
 
     public void Seeking(GameObject target)
     {
-        Vector3 targetPosition = target.transform.position;
+        if (pawn == null || target == null) return; // Prevents accessing destroyed objects
 
-        // Keep the AI's original Y position
-        targetPosition.y = pawn.transform.position.y;
-        
-        // Rotate Towards target
+        Vector3 targetPosition = target.transform.position;
+        targetPosition.y = pawn.transform.position.y; // Keep original height
         pawn.RotateTowardsTarget(targetPosition);
-        
-        // Move to target
         pawn.MoveUp();
     }
 
@@ -266,19 +348,35 @@ public class AIController : Controller
 
     public void TargetPlayerOne()
     {
-        // If game manager exists 
-        if (GameManager.instance != null)
+        if (GameManager.instance == null || GameManager.instance.players == null || GameManager.instance.players.Count == 0)
         {
-            // and if the players array exists 
-            if (GameManager.instance.players != null)
+            Debug.LogWarning(gameObject.name + " - No players found in GameManager!");
+            return;
+        }
+
+        float closestDistance = Mathf.Infinity;
+        GameObject closestPlayer = null;
+
+        foreach (var player in GameManager.instance.players)
+        {
+            if (player == null || player.pawn == null) continue; // Skip destroyed players
+
+            float distance = Vector3.Distance(transform.position, player.pawn.transform.position);
+            if (distance < closestDistance)
             {
-                // And players are in it
-                if (GameManager.instance.players.Count > 0)
-                {
-                    // Then target the pawn of the first player 
-                    target = GameManager.instance.players[0].pawn.gameObject;
-                }
+                closestDistance = distance;
+                closestPlayer = player.pawn.gameObject;
             }
+        }
+
+        if (closestPlayer != null)
+        {
+            target = closestPlayer;
+            Debug.Log(gameObject.name + " - Targeting Player: " + target.name);
+        }
+        else
+        {
+            Debug.LogWarning(gameObject.name + " - No valid players to target.");
         }
     }
 
@@ -324,23 +422,29 @@ public class AIController : Controller
 
     protected bool IsCanSee(GameObject target)
     {
+        if (target == null)
+        {
+            Debug.LogWarning("Target is null or has been destroyed.");
+            return false;
+        }
+
         Debug.Log("Searching for : " + target);
-        
+
         // Find the agent vector to target
         Vector3 agentToTarget = target.transform.position - pawn.transform.position;
-        
+
         // Find the angle between the distance our agent is facing and the target vector 
         float angleToTarget = Vector3.Angle(pawn.transform.forward, agentToTarget);
-        
+
         // if angle is less than field of view
         if (angleToTarget < fieldOfView)
         {
             // Define the starting position to prevent self collision 
             Vector3 rayOrigin = pawn.transform.position + pawn.transform.forward * 0.6f;
-            
+
             // Define ray's direction 
             Vector3 directionToTarget = agentToTarget.normalized;
-            
+
             // Raycast in order to check if there's an obstacle
             RaycastHit hit;
             if (Physics.Raycast(rayOrigin, directionToTarget, out hit, targetDistance))

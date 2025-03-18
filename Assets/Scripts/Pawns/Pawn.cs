@@ -4,7 +4,7 @@ public abstract class Pawn : MonoBehaviour
 {
     // Variables 
     public float noiseMakerVolume;
-    
+    public PlayerController controller;
     
     // Shooting Variables 
     public float fireForce;
@@ -31,6 +31,7 @@ public abstract class Pawn : MonoBehaviour
         mover = GetComponent<Mover>();
         shooter = GetComponent<Shooter>();
         noiseMaker = GetComponent<NoiseMaker>();
+        controller = GetComponent<PlayerController>();
     }
 
     public virtual void Update()
