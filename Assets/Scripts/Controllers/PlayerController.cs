@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class PlayerController : Controller
 {
-    public int score = 0;
-    public int playerNumber = 1; // Assigned dynamically
     protected AudioSource _audioSource;
 
     public KeyCode moveUp;
@@ -32,6 +30,7 @@ public class PlayerController : Controller
         {
             _audioSource = gameObject.AddComponent<AudioSource>();
         }
+
         if (moveSound != null)
         {
             _audioSource.clip = moveSound;
@@ -42,17 +41,17 @@ public class PlayerController : Controller
 
     private void RegisterPlayer()
     {
-        if (GameManager.instance != null)
+        if (GameManager.Instance != null)
         {
-            GameManager.instance.RegisterPlayer(this);
+            GameManager.Instance.players.Add(this);
         }
     }
 
     void OnDestroy()
     {
-        if (GameManager.instance != null)
+        if (GameManager.Instance != null)
         {
-            GameManager.instance.UnregisterPlayer(this);
+            GameManager.Instance.players.Remove(this);
         }
     }
 
@@ -69,59 +68,62 @@ public class PlayerController : Controller
 
         if (Input.GetKey(moveUp))
         {
-            Debug.Log(playerNumber + " Moving Up"); // Debug
+            Debug.Log("Moving Up"); // Debug
             pawn.MoveUp();
             keyPressed = true;
         }
+
         if (Input.GetKey(moveLeft))
         {
-            Debug.Log(playerNumber + " Rotating Left"); // Debug
+            Debug.Log("Rotating Left"); // Debug
             pawn.RotateLeft();
             keyPressed = true;
         }
+
         if (Input.GetKey(moveDown))
         {
-            Debug.Log(playerNumber + " Moving Down"); // Debug
+            Debug.Log("Moving Down"); // Debug
             pawn.MoveDown();
             keyPressed = true;
         }
+
         if (Input.GetKey(moveRight))
         {
-            Debug.Log(playerNumber + " Rotating Right"); // Debug
+            Debug.Log("Rotating Right"); // Debug
             pawn.RotateRight();
             keyPressed = true;
         }
+
         if (Input.GetKeyDown(shootKey))
         {
-            Debug.Log(playerNumber + " Shooting"); // Debug
+            Debug.Log("Shooting"); // Debug
             pawn.Shoot();
             PlayShootSound();
         }
-    }
-    
-    public void AssignPawn(Pawn newPawn)
-    {
-        if (newPawn != null)
-        {
-            pawn = newPawn;
-            Debug.Log("Pawn assigned to Player " + playerNumber + ": " + pawn.name);
-        }
-        else
-        {
-            Debug.LogError("No pawn assigned to Player " + playerNumber);
-        }
+
+        // Ensure movement sound
+        HandleMovementSound(keyPressed);
     }
 
     private void HandleMovementSound(bool keyPressed)
     {
-        if (keyPressed && !_isMoving) { PlayMoveSound(); _isMoving = true; }
-        else if (!keyPressed && _isMoving) { StopMoveSound(); _isMoving = false; }
+        if (keyPressed && !_isMoving)
+        {
+            PlayMoveSound();
+            _isMoving = true;
+        }
+        else if (!keyPressed && _isMoving)
+        {
+            StopMoveSound();
+            _isMoving = false;
+        }
     }
 
     private void PlayMoveSound()
     {
         if (_audioSource != null && moveSound != null && !_audioSource.isPlaying)
         {
+            _audioSource.volume = AudioManager.Instance.sfxSource.volume;
             _audioSource.Play();
         }
     }
@@ -138,6 +140,7 @@ public class PlayerController : Controller
     {
         if (_audioSource != null && shootSound != null)
         {
+            _audioSource.volume = AudioManager.Instance.sfxSource.volume;
             _audioSource.PlayOneShot(shootSound);
         }
     }

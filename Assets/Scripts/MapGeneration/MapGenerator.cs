@@ -33,7 +33,7 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap() {
         
         // Get seed from our GameManager
-        int mapSpeed = GameManager.instance.mapSeed;
+        int mapSpeed = GameManager.Instance.mapSeed;
         Random.InitState(mapSpeed);
         Debug.Log("Map Seed: " + mapSpeed);
         

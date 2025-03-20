@@ -4,7 +4,6 @@ public class Player2Controller : PlayerController
 {
     public override void Start()
     {
-        playerNumber = 2;
         moveUp = KeyCode.UpArrow;
         moveLeft = KeyCode.LeftArrow;
         moveDown = KeyCode.DownArrow;

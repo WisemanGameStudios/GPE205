@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance { get; private set; }
     public List<PlayerController> players;
 
     
@@ -30,13 +30,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Prevents duplicate GameManagers
         }
     }
 
@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour
 
         if (mapGenerator != null)
         {
-            UIContainer.SetActive(false); // Hide UI when the map starts generating
             mapGenerator.GenerateMap();
         }
     }
@@ -77,40 +76,14 @@ public class GameManager : MonoBehaviour
 
     private int DateToInt(DateTime dateToUse)
     {
-        return dateToUse.Year * 10000 + dateToUse.Month * 100 + dateToUse.Day;
+        // Add our date up and return it
+        return dateToUse.Year + dateToUse.Month + dateToUse.Day + dateToUse.Hour + dateToUse.Minute + dateToUse.Second + dateToUse.Millisecond;
     }
-
-    void CreatePlayer(GameObject prefab, Vector3 spawnPosition, Camera cam, int playerNumber)
+    
+    public void SpawnAI(GameObject aiPrefab)
     {
-        GameObject playerObj = Instantiate(prefab, spawnPosition, Quaternion.identity);
-        PlayerController controller = playerObj.GetComponent<PlayerController>();
+        if (aiPrefab == null) return;
 
-        if (controller != null)
-        {
-            controller.playerCamera = cam;
-            controller.playerNumber = playerNumber;
-            players.Add(controller);
-        }
-    }
-
-    public void RegisterPlayer(PlayerController player)
-    {
-        if (!players.Contains(player))
-        {
-            players.Add(player);
-        }
-    }
-
-    public void UnregisterPlayer(PlayerController player)
-    {
-        if (players.Contains(player))
-        {
-            players.Remove(player);
-        }
-    }
-
-    private void SpawnAI(GameObject aiPrefab)
-    {
         AIPawnSpawns = FindObjectsByType<AIPawnSpawn>(FindObjectsSortMode.None);
 
         if (AIPawnSpawns != null && AIPawnSpawns.Length > 0)
@@ -119,26 +92,22 @@ public class GameManager : MonoBehaviour
             GameObject newPlayer = Instantiate(AIControlPrefab, Vector3.zero, Quaternion.identity);
             GameObject newPawn = Instantiate(aiPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
 
+            if (newPlayer == null || newPawn == null) return;
+
             AIController newController = newPlayer.GetComponent<AIController>();
             Pawn newPlayerPawn = newPawn.GetComponent<Pawn>();
 
-            newPawn.AddComponent<NoiseMaker>();
-            newPlayerPawn.noiseMaker = newPawn.GetComponent<NoiseMaker>();
-            newPlayerPawn.noiseMakerVolume = 3;
+            if (newController != null && newPlayerPawn != null)
+            {
+                newPawn.AddComponent<NoiseMaker>();
+                newPlayerPawn.noiseMaker = newPawn.GetComponent<NoiseMaker>();
+                newPlayerPawn.noiseMakerVolume = 3;
 
-            newController.pawn = newPlayerPawn;
+                newController.pawn = newPlayerPawn;
+            }
         }
     }
-
-    private void SpawnAllAI()
-    {
-        SpawnAI(aiPrefab);
-        SpawnAI(pacifistAIPrefab);
-        SpawnAI(couchpotatoAIPrefab);
-        SpawnAI(cowardAIPrefab);
-        SpawnAI(jerkAIPrefab);
-    }
-
+    
     public void PlayerSpawn()
     {
 
@@ -170,6 +139,15 @@ public class GameManager : MonoBehaviour
                 newController.pawn = newPlayerPawn;
             }
         }
+    }
+
+    private void SpawnAllAI()
+    {
+        SpawnAI(aiPrefab);
+        SpawnAI(pacifistAIPrefab);
+        SpawnAI(couchpotatoAIPrefab);
+        SpawnAI(cowardAIPrefab);
+        SpawnAI(jerkAIPrefab);
     }
 }
    

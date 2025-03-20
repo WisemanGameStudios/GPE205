@@ -39,12 +39,6 @@ public class Player2Test : MonoBehaviour
     void Update()
     {
         ProcessInputs();
-
-        // Check if Player 2's health is zero
-        if (playerHealth != null && playerHealth.currentHealth <= 0)
-        {
-            TriggerGameOver();
-        }
     }
 
     public void SetupCamera(Camera cam)
@@ -65,19 +59,5 @@ public class Player2Test : MonoBehaviour
         if (Input.GetKey(moveDown)) pawn.MoveDown();
         if (Input.GetKey(moveRight)) pawn.RotateRight();
         if (Input.GetKeyDown(shootKey)) pawn.Shoot();
-    }
-
-    private void TriggerGameOver()
-    {
-        Debug.Log("Player 2 has died! Triggering Game Over...");
-
-        if (gameStateManager != null)
-        {
-            gameStateManager.ShowGameOverScreen();
-        }
-        else
-        {
-            Debug.LogError("🚨 GameStateManager not found!");
-        }
     }
 }

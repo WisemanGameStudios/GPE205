@@ -13,6 +13,7 @@ public class AIController : Controller
     };
     
     // Public Variables 
+    public GameManager gameManager;
     public AIState defaultState;
     public GameObject target;
     public float targetDistance;
@@ -34,7 +35,8 @@ public class AIController : Controller
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void Start()
     {
-        base.Start(); 
+        base.Start();
+        gameManager = GameManager.Instance;
         defaultState = AIState.Patrol;
 
         // Ensure NavMeshAgent Exists
@@ -61,6 +63,11 @@ public class AIController : Controller
         ProcessInputs(); 
         base.Update();
         
+        if (pawn == null)
+        {
+            Debug.Log("AI pawn was destroyed!");
+        }
+        else
         
         if (defaultState == AIState.Patrol)
         {
@@ -121,7 +128,6 @@ public class AIController : Controller
                 {
                     ChangeState(AIState.Attack);
                 }
-
                 if (!IsPlayerDistanceLessThan(target, targetDistance) && !IsCanSee(target) && !IsCanHear(target))
                 {
                     if (target == null)
@@ -348,7 +354,7 @@ public class AIController : Controller
 
     public void TargetPlayerOne()
     {
-        if (GameManager.instance == null || GameManager.instance.players == null || GameManager.instance.players.Count == 0)
+        if (GameManager.Instance == null || GameManager.Instance.players == null || GameManager.Instance.players.Count == 0)
         {
             Debug.LogWarning(gameObject.name + " - No players found in GameManager!");
             return;
@@ -357,7 +363,7 @@ public class AIController : Controller
         float closestDistance = Mathf.Infinity;
         GameObject closestPlayer = null;
 
-        foreach (var player in GameManager.instance.players)
+        foreach (var player in GameManager.Instance.players)
         {
             if (player == null || player.pawn == null) continue; // Skip destroyed players
 

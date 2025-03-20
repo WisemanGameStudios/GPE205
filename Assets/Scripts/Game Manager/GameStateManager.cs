@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
@@ -23,7 +23,7 @@ public class GameStateManager : MonoBehaviour
 
     public Toggle mapOfTheDayToggle;
     public Toggle randomSeedToggle;
-    private InputField seedInputField;
+    public TMP_InputField seedInputField;
 
     private GameState currentState;
     private GameManager gameManager;
@@ -42,7 +42,7 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameManager.instance;
+        gameManager = GameManager.Instance;
 
         if (gameManager == null)
         {
@@ -126,7 +126,16 @@ public class GameStateManager : MonoBehaviour
 
     public void StartGame()
     {
-        UIContainer.SetActive(false); // Hide UI when game starts
+        // Disable UI when game starts
+        if (UIContainer != null)
+        {
+            UIContainer.SetActive(true); // Ensure the UI container stays active
+        
+            foreach (Transform child in UIContainer.transform)
+            {
+                child.gameObject.SetActive(false); // Disable only its children
+            }
+        }
         gameManager.StartGame();
     }
 }

@@ -53,6 +53,7 @@ MonoBehaviour:
   shootKey: 32
   moveSound: {fileID: 8300000, guid: a5060fa4e3b6f8d4aa71d56cf5f20661, type: 3}
   shootSound: {fileID: 8300000, guid: 9866d454e18bf2e41aab57e1de46b038, type: 3}
+  playerCamera: {fileID: 0}
 --- !u!82 &-1736905572010967453
 AudioSource:
   m_ObjectHideFlags: 0
@@ -66,7 +67,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 8edd5003fbd07af40aff56d5b9cf1ffc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.2
+  m_Volume: 0
   m_Pitch: 1
   Loop: 0
   Mute: 0

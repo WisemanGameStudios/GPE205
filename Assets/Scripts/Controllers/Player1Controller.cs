@@ -4,7 +4,6 @@ public class Player1Controller : PlayerController
 {
     public override void Start()
     {
-        playerNumber = 1;
         moveUp = KeyCode.W;
         moveLeft = KeyCode.A;
         moveDown = KeyCode.S;
