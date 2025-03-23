@@ -1,29 +1,43 @@
-using System;
 using UnityEngine;
 
-public class HealthPickUp : MonoBehaviour
+[RequireComponent(typeof(Collider))]
+public class HealthPickup : MonoBehaviour
 {
-    //Variables
-    public HealthPowerUp powerup;
-    public float rotateSpeed;
+    
+    public float healthAmount = 50f;
+    public float rotationSpeed = 45f;
+
+    
+    public GameObject pickupEffect;
+    public AudioClip pickupSound;
 
     private void Update()
     {
-        // Rotate the pick up
-        transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
+        // Rotate for visibility
+        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
     }
 
-    public void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        // Variable to store objects PowerupController
-        PowerupManager pm = other.gameObject.GetComponent<PowerupManager>();
-        
-        // If other object has a PowerupController
-        if (pm)
+        Debug.Log($"HealthPickup triggered by: {other.name}");
+
+        // Try to get a Health component from the object
+        Health health = other.GetComponent<Health>();
+        if (health != null && health.currentHealth < health.maxHealth)
         {
-            // Add the powerup
-            pm.Add(powerup);
-            
+            // Heal the tank
+            health.Heal(healthAmount);
+
+            // Spawn visual effect
+            if (pickupEffect)
+                Instantiate(pickupEffect, transform.position, Quaternion.identity);
+
+            // Play sound (if AudioSource is present)
+            if (pickupSound)
+            {
+                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            }
+
             // Destroy the pickup
             Destroy(gameObject);
         }

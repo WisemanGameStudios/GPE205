@@ -1,78 +1,112 @@
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    // Public Variables 
+    [Header("Health Settings")]
     public float currentHealth;
     public float maxHealth;
+
+    [Header("References")]
     public PlayerController controller;
-    public bool isPlayer; // Identify if this entity is the player
-    
-    // Private Variables
+    public bool isPlayer;
+
     private GameStateManager gameStateManager;
-    
+    private bool isDead = false;
+
+    // ✅ Declare the death event
+    public event Action<GameObject> OnDeath;
 
     void Start()
     {
         currentHealth = maxHealth;
-        
+
         if (controller == null)
         {
             controller = GetComponent<PlayerController>();
         }
 
-        // Assign GameStateManager
         gameStateManager = GameStateManager.Instance;
-
         if (gameStateManager == null)
         {
-            Debug.LogError("GameStateManager instance not found in the scene!");
+            Debug.LogError("🚨 GameStateManager instance not found in the scene!");
         }
     }
 
-    void Update()
+    public void TakeDamage(float amount, Pawn source = null)
     {
-        if (Input.GetKeyDown(KeyCode.Q)) // Press Q to take damage for testing
-        {
-            TakeDamage(10f); // Reduce health by 10
-        }
-    }
-    
-    public void TakeDamage(float amount)
-    {
-        TakeDamage(amount, null); // Calls the main method with null as source
-    }
-    
-    public void TakeDamage(float amount, Pawn source)
-    {
+        if (isDead) return;
+
         currentHealth -= amount;
-        Debug.Log($"{(source != null ? source.gameObject.name : "Unknown")} did {amount} damage to {gameObject.name}");
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        if (source != null)
+        {
+            Debug.Log($"{source.gameObject.name} dealt {amount} damage to {gameObject.name}.");
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} took {amount} damage.");
+        }
+
+        // Update the health bar visually
+        TankHealthBar healthBar = GetComponent<TankHealthBar>();
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth);
+        }
 
         if (currentHealth <= 0)
         {
-            Die(source);
+            // If the tank is a player, notify the player script to fire OnDeath
+            if (isPlayer)
+            {
+                if (TryGetComponent<Player1Test>(out var p1)) p1.Die();
+                else if (TryGetComponent<Player2Test>(out var p2)) p2.Die();
+            }
+            else
+            {
+                // AI or others
+                Die(source);
+            }
         }
     }
 
-    public void Heal(float amount, Pawn source)
+    public void Heal(float amount, Pawn source = null)
     {
         currentHealth += amount;
-        Debug.Log($"{(source != null ? source.name : "Unknown")} healed {gameObject.name} for {amount}");
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        Debug.Log($"{(source != null ? source.name : "Unknown")} healed {gameObject.name} for {amount}.");
+
+        // Update health bar
+        TankHealthBar healthBar = GetComponent<TankHealthBar>();
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth);
+        }
     }
 
-    public void Die(Pawn source)
+    public void Die()
     {
-        Debug.Log($"{gameObject.name} has died!");
+        if (isDead) return;
+        isDead = true;
 
-        // If this is the player, trigger Game Over
-        if (isPlayer && gameStateManager != null)
+        Debug.Log($"💀 {gameObject.name} has died!");
+
+        if (isPlayer)
         {
-            gameStateManager.ShowGameOverScreen();
-            Debug.Log("Game Over triggered.");
+            OnDeath?.Invoke(gameObject);
         }
 
         Destroy(gameObject);
+    }
+    
+    public void Die(Pawn source)
+    {
+        // Optional: use 'source' for tracking who caused the death
+        Debug.Log($"{gameObject.name} was killed by {(source != null ? source.name : "Unknown")}");
+
+        Die(); // Call the no-arg version
     }
 }

@@ -1,11 +1,8 @@
-using UnityEngine;
-
 [System.Serializable]
 public class HealthPowerUp : Powerup
 {
-    // Variables 
-    public float healthToAdd;
-
+    // Variables
+    public float healthToAdd; 
     public override void Apply(PowerupManager target)
     {
         // Apply Health changes
@@ -13,8 +10,8 @@ public class HealthPowerUp : Powerup
 
         if (targetHealth != null)
         {
-            // The second parameter is the pawn who caused the healing - in this case, they healed themselves
-            targetHealth.Heal(healthToAdd, target.GetComponent<Pawn>()); 
+
+            targetHealth.Heal(healthToAdd, target.GetComponent<Pawn>());
         }
     }
 
@@ -25,9 +22,8 @@ public class HealthPowerUp : Powerup
 
         if (targetHealth != null)
         {
-            // The second parameter is the pawn who caused the healing - in this case, they healed themselves
+            // target reference
             targetHealth.TakeDamage(healthToAdd, target.GetComponent<Pawn>());
-                
         }
     }
 }

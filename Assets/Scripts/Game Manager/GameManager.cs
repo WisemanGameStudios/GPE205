@@ -8,20 +8,18 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public List<PlayerController> players;
 
-    
     public MapGenerator mapGenerator;
+    public MultiplayerManager multiplayerManager;
     public int mapSeed;
     public bool isMapOfTheDay = false;
     public bool isRandomSeed = false;
-    
 
     private PawnSpawnPoint[] pawnSpawnPoints;
     private AIPawnSpawn[] AIPawnSpawns;
-    
+
     public GameObject AIControlPrefab;
     public GameObject playercontrolPrefab;
     public GameObject tankPrefab;
-    public GameObject aiPrefab;
     public GameObject pacifistAIPrefab;
     public GameObject couchpotatoAIPrefab;
     public GameObject cowardAIPrefab;
@@ -33,22 +31,57 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject); // Prevents duplicate GameManagers
         }
+        
     }
+    
+    
 
     public void StartGame()
     {
+        CleanupPreviousGame();
         GenerateMap();
-        PlayerSpawn();
+        multiplayerManager.SpawnPlayers();
         SpawnAllAI();
     }
 
-    
+    private void CleanupPreviousGame()
+    {
+        // Destroy existing player controllers
+        foreach (var player in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
+        {
+            Destroy(player.gameObject);
+        }
 
+        // Destroy existing pawns
+        foreach (var pawn in FindObjectsByType<Pawn>(FindObjectsSortMode.None))
+        {
+            Destroy(pawn.gameObject);
+        }
+
+        // Destroy existing AI controllers
+        foreach (var ai in FindObjectsByType<AIController>(FindObjectsSortMode.None))
+        {
+            Destroy(ai.gameObject);
+        }
+
+        // Destroy any existing Cameras
+        foreach (var cam in FindObjectsByType<Camera>(FindObjectsSortMode.None))
+        {
+            Destroy(cam.gameObject);
+        }
+
+        // Destroy AudioListeners (optional if you're instantiating them on camera)
+        foreach (var listener in FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+        {
+            Destroy(listener.gameObject);
+        }
+    }
 
     private void GenerateMap()
     {
@@ -76,10 +109,9 @@ public class GameManager : MonoBehaviour
 
     private int DateToInt(DateTime dateToUse)
     {
-        // Add our date up and return it
         return dateToUse.Year + dateToUse.Month + dateToUse.Day + dateToUse.Hour + dateToUse.Minute + dateToUse.Second + dateToUse.Millisecond;
     }
-    
+
     public void SpawnAI(GameObject aiPrefab)
     {
         if (aiPrefab == null) return;
@@ -107,48 +139,15 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
-    public void PlayerSpawn()
-    {
-
-        pawnSpawnPoints = FindObjectsByType<PawnSpawnPoint>(FindObjectsSortMode.None);
-
-        if (pawnSpawnPoints != null)
-        {
-            if (pawnSpawnPoints.Length > 0)
-            {
-                GameObject spawnPoint = pawnSpawnPoints[Random.Range(0, pawnSpawnPoints.Length)].gameObject;
-
-                // Spawn player controller at 0,0,0 with 0 rotation
-                GameObject newPlayer = Instantiate(playercontrolPrefab, Vector3.zero, Quaternion.identity);
-
-                // Spawn pawn and attach it to controller 
-                GameObject newPawn =
-                    Instantiate(tankPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation) as GameObject;
-
-                // get the pawn and player controller component
-                Controller newController = newPlayer.GetComponent<Controller>();
-                Pawn newPlayerPawn = newPawn.GetComponent<Pawn>();
-
-                // Get the noise maker component 
-                newPawn.AddComponent<NoiseMaker>();
-                newPlayerPawn.noiseMaker = newPawn.GetComponent<NoiseMaker>();
-                newPlayerPawn.noiseMakerVolume = 3;
-
-                // Create Controller 
-                newController.pawn = newPlayerPawn;
-            }
-        }
-    }
 
     private void SpawnAllAI()
     {
-        SpawnAI(aiPrefab);
         SpawnAI(pacifistAIPrefab);
         SpawnAI(couchpotatoAIPrefab);
         SpawnAI(cowardAIPrefab);
         SpawnAI(jerkAIPrefab);
     }
 }
+
    
 

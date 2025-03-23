@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
@@ -24,9 +25,11 @@ public class GameStateManager : MonoBehaviour
     public Toggle mapOfTheDayToggle;
     public Toggle randomSeedToggle;
     public TMP_InputField seedInputField;
+    public Toggle splitScreenToggle; // UI Toggle for Split-Screen
 
-    private GameState currentState;
+    public GameState currentState;
     private GameManager gameManager;
+    private MultiplayerManager multiplayerManager; // MultiplayerManager Reference
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class GameStateManager : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
+        multiplayerManager = FindObjectOfType<MultiplayerManager>(); // Find the multiplayer manager
 
         if (gameManager == null)
         {
@@ -50,6 +54,13 @@ public class GameStateManager : MonoBehaviour
             return;
         }
 
+        if (multiplayerManager == null)
+        {
+            Debug.LogError("MultiplayerManager instance not found!");
+            return;
+        }
+        
+        GameStateManager.Instance.ChangeState(GameState.Gameplay);
         ChangeState(GameState.TitleScreen);
         Time.timeScale = 1;
     }
@@ -110,8 +121,8 @@ public class GameStateManager : MonoBehaviour
     public void SetRandomSeed(bool value)
     {
         gameManager.isRandomSeed = value;
-        gameManager.isMapOfTheDay = !value; // Ensure only one mode is selected
-        gameManager.GenerateSeed(); // Generate a new random seed
+        gameManager.isMapOfTheDay = !value;
+        gameManager.GenerateSeed();
     }
     
     public void SetCustomSeed()
@@ -126,7 +137,9 @@ public class GameStateManager : MonoBehaviour
 
     public void StartGame()
     {
-        // Disable UI when game starts
+        Debug.Log("Starting Game...");
+
+        // Disable UI when the game starts
         if (UIContainer != null)
         {
             UIContainer.SetActive(true); // Ensure the UI container stays active
@@ -136,6 +149,18 @@ public class GameStateManager : MonoBehaviour
                 child.gameObject.SetActive(false); // Disable only its children
             }
         }
+        
+        // Check if Split-Screen Toggle is Enabled
+        bool isSplitScreenEnabled = splitScreenToggle != null && splitScreenToggle.isOn;
+        Debug.Log($"🎮 Split-Screen Mode: {(isSplitScreenEnabled ? "Enabled" : "Disabled")}");
+
+        // Apply the correct camera settings in MultiplayerManager
+        multiplayerManager.isSplitScreen = isSplitScreenEnabled;
+
+        // Set to Gameplay
+        ChangeState(GameState.Gameplay); 
+        
+        // Start the actual game
         gameManager.StartGame();
     }
 }
