@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
 
     private PawnSpawnPoint[] pawnSpawnPoints;
     private AIPawnSpawn[] AIPawnSpawns;
-
+    
+    // Prefabs
     public GameObject AIControlPrefab;
     public GameObject playercontrolPrefab;
     public GameObject tankPrefab;
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
     public GameObject cowardAIPrefab;
     public GameObject jerkAIPrefab;
     public GameObject UIContainer; // UI to disable on game start
+    
+    
 
     private void Awake()
     {
@@ -40,8 +43,6 @@ public class GameManager : MonoBehaviour
         
     }
     
-    
-
     public void StartGame()
     {
         CleanupPreviousGame();
@@ -113,33 +114,69 @@ public class GameManager : MonoBehaviour
     }
 
     public void SpawnAI(GameObject aiPrefab)
+{
+    if (aiPrefab == null) return;
+
+    AIPawnSpawns = FindObjectsByType<AIPawnSpawn>(FindObjectsSortMode.None);
+
+    if (AIPawnSpawns != null && AIPawnSpawns.Length > 0)
     {
-        if (aiPrefab == null) return;
+        // Try multiple times to avoid overlapping AI
+        const int maxTries = 10;
+        Vector3 chosenSpawn = Vector3.zero;
+        Quaternion chosenRot = Quaternion.identity;
+        bool foundClear = false;
 
-        AIPawnSpawns = FindObjectsByType<AIPawnSpawn>(FindObjectsSortMode.None);
-
-        if (AIPawnSpawns != null && AIPawnSpawns.Length > 0)
+        for (int i = 0; i < maxTries; i++)
         {
             GameObject spawnPoint = AIPawnSpawns[Random.Range(0, AIPawnSpawns.Length)].gameObject;
-            GameObject newPlayer = Instantiate(AIControlPrefab, Vector3.zero, Quaternion.identity);
-            GameObject newPawn = Instantiate(aiPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+            Vector3 testPos = spawnPoint.transform.position;
 
-            if (newPlayer == null || newPawn == null) return;
-
-            AIController newController = newPlayer.GetComponent<AIController>();
-            Pawn newPlayerPawn = newPawn.GetComponent<Pawn>();
-
-            if (newController != null && newPlayerPawn != null)
+            if (!Physics.CheckSphere(testPos, 2f)) // Check for overlaps
             {
-                newPawn.AddComponent<NoiseMaker>();
-                newPlayerPawn.noiseMaker = newPawn.GetComponent<NoiseMaker>();
-                newPlayerPawn.noiseMakerVolume = 3;
+                chosenSpawn = testPos;
+                chosenRot = spawnPoint.transform.rotation;
+                foundClear = true;
+                break;
+            }
+        }
 
-                newController.pawn = newPlayerPawn;
+        if (!foundClear)
+        {
+            Debug.LogWarning("No clear AI spawn point found. Spawning anyway...");
+            GameObject fallback = AIPawnSpawns[0].gameObject;
+            chosenSpawn = fallback.transform.position;
+            chosenRot = fallback.transform.rotation;
+        }
+
+        GameObject newControllerObj = Instantiate(AIControlPrefab, Vector3.zero, Quaternion.identity);
+        GameObject newPawnObj = Instantiate(aiPrefab, chosenSpawn, chosenRot);
+
+        if (newControllerObj == null || newPawnObj == null) return;
+
+        AIController controller = newControllerObj.GetComponent<AIController>();
+        Pawn pawn = newPawnObj.GetComponent<Pawn>();
+
+        if (controller != null && pawn != null)
+        {
+            // Add noise system
+            newPawnObj.AddComponent<NoiseMaker>();
+            pawn.noiseMaker = newPawnObj.GetComponent<NoiseMaker>();
+            pawn.noiseMakerVolume = 3;
+
+            // Assign control
+            controller.pawn = pawn;
+
+            // Optional: Assign target from GameManager's player list
+            if (players != null && players.Count > 0)
+            {
+                // Pick random player from GameManager player list
+                var randomPlayer = players[Random.Range(0, players.Count)];
+                controller.target = randomPlayer?.pawn?.gameObject;
             }
         }
     }
-
+}
     private void SpawnAllAI()
     {
         SpawnAI(pacifistAIPrefab);

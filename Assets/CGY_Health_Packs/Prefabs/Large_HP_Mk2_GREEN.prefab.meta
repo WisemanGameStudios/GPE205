@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: e0fa732d278e1a247862bd12eac6eaf0
+timeCreated: 1529515845
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs/Large_HP_Mk2_GREEN.prefab
+  uploadId: 252205

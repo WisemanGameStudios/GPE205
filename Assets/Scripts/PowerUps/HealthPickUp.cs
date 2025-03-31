@@ -1,15 +1,21 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public class HealthPickup : MonoBehaviour
 {
-    
+    // Variables
     public float healthAmount = 50f;
     public float rotationSpeed = 45f;
 
-    
+    // Sound Effect
     public GameObject pickupEffect;
     public AudioClip pickupSound;
+
+    private PowerupSpawner spawner;
+
+    private void Start()
+    {
+        spawner = GetComponentInParent<PowerupSpawner>(); // spawner tracking
+    }
 
     private void Update()
     {
@@ -19,26 +25,26 @@ public class HealthPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"HealthPickup triggered by: {other.name}");
-
-        // Try to get a Health component from the object
+        // Only respond to tanks/players with a Health component
         Health health = other.GetComponent<Health>();
         if (health != null && health.currentHealth < health.maxHealth)
         {
-            // Heal the tank
+            Debug.Log($"{other.name} picked up health!");
+
             health.Heal(healthAmount);
 
-            // Spawn visual effect
+            // Play effect
             if (pickupEffect)
                 Instantiate(pickupEffect, transform.position, Quaternion.identity);
 
-            // Play sound (if AudioSource is present)
+            // Play sound
             if (pickupSound)
-            {
                 AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-            }
 
-            // Destroy the pickup
+            // Tell the spawner to clear reference (optional)
+            if (spawner != null)
+                spawner.ClearSpawnedReference();
+
             Destroy(gameObject);
         }
     }

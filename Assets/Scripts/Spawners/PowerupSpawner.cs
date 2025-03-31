@@ -2,39 +2,45 @@ using UnityEngine;
 
 public class PowerupSpawner : MonoBehaviour
 {
-    // Variables 
     public float spawnDelay;
     private float _nextSpawnTime;
-    private Transform tf;
     
-    // Game Object Variables 
     public GameObject powerupPrefab;
     private GameObject _spawnedPowerup;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         _nextSpawnTime = Time.time + spawnDelay;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // If it exists nothing spawns
-        if (_spawnedPowerup == null)
+        if (_spawnedPowerup == null && Time.time > _nextSpawnTime)
         {
-            // and it is time to spawn
-            if (Time.time > _nextSpawnTime)
-            {
-                // Spawn it and set the next time 
-                _spawnedPowerup = Instantiate(powerupPrefab, transform.position, Quaternion.identity) as GameObject; 
-                _nextSpawnTime = Time.time + spawnDelay;
-            }
-        }
-        else
-        {
-            // Otherwise, object still exists, postpone spawn
+            _spawnedPowerup = Instantiate(powerupPrefab, transform.position, Quaternion.identity);
             _nextSpawnTime = Time.time + spawnDelay;
         }
     }
+
+    // Called by pickup when collected
+    public void ClearSpawnedReference()
+    {
+        _spawnedPowerup = null;
+        _nextSpawnTime = Time.time + spawnDelay;
+    }
+    
+    Vector3 GetValidSpawnPoint(Vector3 center, float range)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 randomPoint = center + new Vector3(Random.Range(-range, range), 0, Random.Range(-range, range));
+            if (UnityEngine.AI.NavMesh.SamplePosition(randomPoint, out UnityEngine.AI.NavMeshHit hit, 2.0f, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        return center; // fallback
+    }
 }
+ 

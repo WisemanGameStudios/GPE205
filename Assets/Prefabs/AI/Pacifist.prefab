@@ -45,10 +45,10 @@ GameObject:
   - component: {fileID: 558272828967855055}
   - component: {fileID: 7469602974655405960}
   - component: {fileID: 8547693500649870947}
-  - component: {fileID: 7850118411509810047}
   - component: {fileID: 7473405036055286628}
-  - component: {fileID: 7794583461427198759}
   - component: {fileID: -7539737284188099895}
+  - component: {fileID: 3621360120840771739}
+  - component: {fileID: 2426111986520929261}
   m_Layer: 0
   m_Name: Pacifist
   m_TagString: Untagged
@@ -132,17 +132,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pawn: {fileID: 0}
-  gameManager: {fileID: 0}
   defaultState: 0
   target: {fileID: 0}
   targetDistance: 10
   attackDistance: 0
-  minattackDistance: 0
   fleeDistance: 5
-  minFleeDistance: 0
-  hearDistance: 0
   fieldOfView: 0
-  waypoints: []
+  hearDistance: 6
+  obstacleAvoidDistance: 1.5
+  currentRoomZone: {fileID: 0}
+  patrolPoints: []
+  audioSource: {fileID: 0}
 --- !u!114 &558272828967855055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fde5e3ed1c09764690662a453f5d09b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseMakerVolume: 0
+  noiseMakerVolume: 5
   controller: {fileID: 0}
   fireForce: 300
   fireRate: 60
@@ -195,28 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8006ab491be3eb946aa0fa3acc102797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!195 &7850118411509810047
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2356963347327881921}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!54 &7473405036055286628
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -241,11 +219,24 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!135 &7794583461427198759
-SphereCollider:
+  m_Interpolate: 1
+  m_Constraints: 80
+  m_CollisionDetection: 1
+--- !u!114 &-7539737284188099895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2356963347327881921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verticalOffset: 4
+--- !u!136 &3621360120840771739
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -262,10 +253,12 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 2
-  m_Center: {x: 0, y: 0.76, z: 0}
---- !u!114 &-7539737284188099895
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.48, z: -0.01}
+--- !u!114 &2426111986520929261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,11 +267,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2356963347327881921}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 08c03729003a8304284353bf6880dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 220634206329382737, guid: 847b659b5a85a5c42a1d2044602fda54, type: 3}
-  verticalOffset: 4
+  uprightThreshold: 0.3
+  correctionSpeed: 2
 --- !u!1 &3191915781247952687
 GameObject:
   m_ObjectHideFlags: 0

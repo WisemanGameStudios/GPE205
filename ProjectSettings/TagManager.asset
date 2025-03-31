@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Sphere
+  - WaypointGroup1
+  - WaypointGroup2
+  - WaypointGroup3
   layers:
   - Default
   - TransparentFX

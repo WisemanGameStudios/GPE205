@@ -110,18 +110,5 @@ public class MapGenerator : MonoBehaviour
                 grid[currentCol,currentRow] = tempRoom;
             }
         }
-        
-        // Bake NavMesh after all rooms are placed
-        BakeNavMesh(surfaces);
     }
-    
-    private void BakeNavMesh(List<NavMeshSurface> surfaces)
-    {
-        Debug.Log("Baking NavMesh...");
-        foreach (NavMeshSurface surface in surfaces)
-        {
-            surface.BuildNavMesh();
-        }
-    }
-
 }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f6ccd68ac2a4ec74ebbbd571ac4524ed
+timeCreated: 1507031764
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs/Medium_HP_PINK.prefab
+  uploadId: 252205

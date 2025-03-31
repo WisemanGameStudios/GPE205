@@ -6,6 +6,7 @@ using System.Collections;
 public class UIManager : MonoBehaviour
 {
     public GameStateManager gameStateManager;
+    public static UIManager Instance;
 
     public Button startGameButton;
     public Button optionsButton;
@@ -14,12 +15,13 @@ public class UIManager : MonoBehaviour
     public Button quitButton;
     public Button restartButton;
     public Button mainMenuButton;
-
+    
     private void Start()
     {
         ShowTitleScreen(); // Start at the title screen
     }
-
+    
+    
     public void ShowTitleScreen()
     {
         gameStateManager.TitleScreenObject.SetActive(true);

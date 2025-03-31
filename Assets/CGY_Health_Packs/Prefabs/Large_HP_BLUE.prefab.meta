@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6ee122f295935374eb97c182dff7fcef
+timeCreated: 1507031673
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs/Large_HP_BLUE.prefab
+  uploadId: 252205

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f62c8d709decce545a3f0b0f73a8e7a2
+timeCreated: 1506866004
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Materials/Large_HP_YELLOW.mat
+  uploadId: 252205

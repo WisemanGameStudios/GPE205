@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7e70f2d043323d143bfd5fe88f64703b
+timeCreated: 1507031761
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs/Small_HP_PINK.prefab
+  uploadId: 252205

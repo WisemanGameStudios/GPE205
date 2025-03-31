@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9e70c1504cbcad84ab16d7fd6e55def1
+timeCreated: 1506864777
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Materials/Medium_HP_PINK.mat
+  uploadId: 252205

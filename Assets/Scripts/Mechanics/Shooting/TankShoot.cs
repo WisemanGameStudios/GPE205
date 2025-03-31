@@ -19,6 +19,7 @@ public class TankShoot : Shooter
     {
        GameObject newShell = Instantiate(Shell, firePoint.position, firePoint.rotation) as GameObject;
        
+       
        DamageOnHit doh = newShell.GetComponent<DamageOnHit>();
        if (doh != null)
        {

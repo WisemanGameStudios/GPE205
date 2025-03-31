@@ -81,10 +81,16 @@ PrefabInstance:
       addedObject: {fileID: 8203598278170752877}
     - targetCorrespondingSourceObject: {fileID: 6896015665200331406, guid: 85e733c4ff4f87b4c8a2e2f78f63c110, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -3368271696367551920}
+      addedObject: {fileID: 213948464665874549}
     - targetCorrespondingSourceObject: {fileID: 6896015665200331406, guid: 85e733c4ff4f87b4c8a2e2f78f63c110, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 213948464665874549}
+      addedObject: {fileID: 5509329435196390444}
+    - targetCorrespondingSourceObject: {fileID: 6896015665200331406, guid: 85e733c4ff4f87b4c8a2e2f78f63c110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3125865338926807359}
+    - targetCorrespondingSourceObject: {fileID: 6896015665200331406, guid: 85e733c4ff4f87b4c8a2e2f78f63c110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6629336453704798654}
   m_SourcePrefab: {fileID: 100100000, guid: 85e733c4ff4f87b4c8a2e2f78f63c110, type: 3}
 --- !u!1 &2299927734867337595 stripped
 GameObject:
@@ -119,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fde5e3ed1c09764690662a453f5d09b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseMakerVolume: 0
+  noiseMakerVolume: 5
   controller: {fileID: 0}
   fireForce: 300
   fireRate: 60
@@ -167,8 +173,8 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
+  m_Interpolate: 1
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!23 &8203598278170752877
 MeshRenderer:
@@ -215,8 +221,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &-3368271696367551920
-SphereCollider:
+--- !u!114 &213948464665874549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2299927734867337595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verticalOffset: 4
+--- !u!65 &5509329435196390444
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -234,9 +253,9 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
-  m_Center: {x: 0, y: 0.91, z: 0.67}
---- !u!114 &213948464665874549
+  m_Size: {x: 3.090393, y: 2.9027934, z: 3.5928907}
+  m_Center: {x: 0, y: 1.433795, z: 0.42544842}
+--- !u!114 &-3125865338926807359
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -245,8 +264,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 2299927734867337595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
+  m_Script: {fileID: 11500000, guid: f162fac13521c5b44bc514cea064627e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 220634206329382737, guid: 847b659b5a85a5c42a1d2044602fda54, type: 3}
-  verticalOffset: 4
+  pawn: {fileID: 0}
+  defaultState: 0
+  target: {fileID: 0}
+  targetDistance: 10
+  attackDistance: 5
+  fleeDistance: 3
+  fieldOfView: 90
+  hearDistance: 6
+  obstacleAvoidDistance: 1.5
+  currentRoomZone: {fileID: 0}
+  patrolPoints: []
+  audioSource: {fileID: 0}
+  screamClip: {fileID: 0}
+--- !u!114 &6629336453704798654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2299927734867337595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c03729003a8304284353bf6880dc13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uprightThreshold: 0.3
+  correctionSpeed: 2

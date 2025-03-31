@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6ef79e3ad56da0d4aa970722b682ddf3
+timeCreated: 1507029617
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs_with_LODS/Small_HP_with_LODs_PINK.prefab
+  uploadId: 252205

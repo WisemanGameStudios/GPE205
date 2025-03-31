@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnDelay: 2
-  powerupPrefab: {fileID: 602136692443853981, guid: 42ef488912290b74087955f931777f4e, type: 3}
+  powerupPrefab: {fileID: 1000012583719432, guid: 856b1c5e4f428854b86e2bd498e72da2, type: 3}

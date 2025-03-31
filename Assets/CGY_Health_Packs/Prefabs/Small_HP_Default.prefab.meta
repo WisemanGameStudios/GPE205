@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 653866a9b2ff331468d474b0c0ea75eb
+timeCreated: 1507031457
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs/Small_HP_Default.prefab
+  uploadId: 252205

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 49902490abd7dce4fb34d0ef1276dbe4
+timeCreated: 1529514116
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Materials/Medium_HP_Mk2_Default.mat
+  uploadId: 252205

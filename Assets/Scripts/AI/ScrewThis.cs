@@ -1,57 +1,55 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class ScrewThis : AIController
 {
-    public override void Start()
-    {
-        base.Start(); // Ensure base AI initialization
-        defaultState = AIState.Patrol; // Start in Patrol mode
+    public AudioClip scream;
+    private AudioSource audioSource;
 
-        // Ensure ScrewThis has a NavMeshAgent
-        if (navAgent == null)
-        {
-            Debug.LogError(gameObject.name + " is missing a NavMeshAgent!");
-        }
-    }
-
-    public override void ProcessInputs()
+    public override void Update()
     {
+        base.Update();
+
         if (target == null)
         {
-            TargetPlayerOne(); // Try to find the player if no target exists
+            FindPlayerTarget();
         }
 
-        if (target != null && IsPlayerDistanceLessThan(target, targetDistance))
+        if (target != null && Vector3.Distance(transform.position, target.transform.position) <= detectionRadius)
         {
-            Debug.Log("Screw this! I'm out of here!");
-            ChangeState(AIState.Flee);
-            FleeFromTarget(); // Use NavMesh to move away
+            if (!audioSource.isPlaying && scream != null)
+            {
+                audioSource.clip = scream;
+                audioSource.Play();
+            }
+
+            currentState = AIState.Flee; 
         }
         else
         {
-            ChangeState(AIState.Patrol);
-            WanderRandomly(); // Ensure AI continues patrolling
+            currentState = AIState.Patrol; 
         }
     }
 
-    private void FleeFromTarget()
+    private void FindPlayerTarget()
     {
-        if (target == null || navAgent == null) return;
+        if (GameManager.Instance == null || GameManager.Instance.players == null) return;
 
-        // Calculate a flee direction away from the target
-        Vector3 fleeDirection = (transform.position - target.transform.position).normalized;
-        Vector3 fleeDestination = transform.position + (fleeDirection * fleeDistance);
+        float closest = Mathf.Infinity;
+        GameObject closestTarget = null;
 
-        // Ensure AI stays on the NavMesh
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(fleeDestination, out hit, fleeDistance, NavMesh.AllAreas))
+        foreach (var player in GameManager.Instance.players)
         {
-            navAgent.SetDestination(hit.position);
+            if (player != null && player.pawn != null)
+            {
+                float dist = Vector3.Distance(transform.position, player.pawn.transform.position);
+                if (dist < closest)
+                {
+                    closest = dist;
+                    closestTarget = player.pawn.gameObject;
+                }
+            }
         }
-        else
-        {
-            Debug.LogWarning(gameObject.name + " couldn't find a valid flee position!");
-        }
+
+        target = closestTarget;
     }
 }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6f33d75162e77a4419e6aae9e882e046
+timeCreated: 1507029354
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Prefabs_with_LODS/Large_HP_with_LODs_BLUE.prefab
+  uploadId: 252205

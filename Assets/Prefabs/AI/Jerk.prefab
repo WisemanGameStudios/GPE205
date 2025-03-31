@@ -218,10 +218,10 @@ GameObject:
   - component: {fileID: -3561040969805457040}
   - component: {fileID: 4298588048957823126}
   - component: {fileID: -4802042245352839032}
-  - component: {fileID: 4374988402620264304}
-  - component: {fileID: -4684555449092734311}
   - component: {fileID: 6796354125337852354}
   - component: {fileID: -5427732741079686163}
+  - component: {fileID: 1697428635344829955}
+  - component: {fileID: -7568921847547429214}
   m_Layer: 0
   m_Name: Jerk
   m_TagString: Untagged
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fde5e3ed1c09764690662a453f5d09b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseMakerVolume: 0
+  noiseMakerVolume: 5
   controller: {fileID: 0}
   fireForce: 400
   fireRate: 60
@@ -331,7 +331,7 @@ MonoBehaviour:
   mover: {fileID: 0}
   shooter: {fileID: 0}
   noiseMaker: {fileID: 0}
-  shellPrefab: {fileID: 0}
+  shellPrefab: {fileID: 806465967288384690, guid: 4d156aef76676f9458f3540984ac8118, type: 3}
 --- !u!114 &-3561040969805457040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,11 +381,48 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
+  m_Interpolate: 1
+  m_Constraints: 80
   m_CollisionDetection: 0
---- !u!135 &4374988402620264304
-SphereCollider:
+--- !u!114 &6796354125337852354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7133084417560073191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e4f3bda964beb4694091da4e104a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pawn: {fileID: 0}
+  defaultState: 0
+  target: {fileID: 0}
+  targetDistance: 10
+  attackDistance: 5
+  fleeDistance: 5
+  fieldOfView: 0
+  hearDistance: 6
+  obstacleAvoidDistance: 1.5
+  currentRoomZone: {fileID: 0}
+  patrolPoints: []
+  audioSource: {fileID: 0}
+--- !u!114 &-5427732741079686163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7133084417560073191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verticalOffset: 4
+--- !u!136 &1697428635344829955
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -402,32 +439,12 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2.4
-  m_Center: {x: 0, y: 1.4, z: 0.86}
---- !u!195 &-4684555449092734311
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7133084417560073191}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &6796354125337852354
+  serializedVersion: 2
+  m_Radius: 3
+  m_Height: 6
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: 0.5}
+--- !u!114 &-7568921847547429214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,32 +453,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7133084417560073191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8e4f3bda964beb4694091da4e104a37, type: 3}
+  m_Script: {fileID: 11500000, guid: 08c03729003a8304284353bf6880dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pawn: {fileID: 0}
-  gameManager: {fileID: 0}
-  defaultState: 0
-  target: {fileID: 0}
-  targetDistance: 10
-  attackDistance: 5
-  minattackDistance: 0
-  fleeDistance: 5
-  minFleeDistance: 0
-  hearDistance: 2
-  fieldOfView: 0
-  waypoints: []
---- !u!114 &-5427732741079686163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7133084417560073191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b351a5d26368846adda681cacf53dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBarPrefab: {fileID: 220634206329382737, guid: 847b659b5a85a5c42a1d2044602fda54, type: 3}
-  verticalOffset: 4
+  uprightThreshold: 0.3
+  correctionSpeed: 2

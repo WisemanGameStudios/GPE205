@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class MultiplayerManager : MonoBehaviour
 {
+    // Prefabs
     public GameObject player1Prefab;
     public GameObject player2Prefab;
     public GameObject player1CamPrefab;
@@ -17,16 +18,41 @@ public class MultiplayerManager : MonoBehaviour
     public List<PawnSpawnPoint> pawnSpawnPoints = new List<PawnSpawnPoint>();
     public bool isSplitScreen = false;
 
-    private int player1Deaths = 0;
-    private int player2Deaths = 0;
-    private const int maxDeaths = 3;
+    // Lives
+    public LivesUI livesUI; // Drag and drop in Inspector
+    public int maxLives = 3;
+    private int player1Lives;
+    private int player2Lives;
 
     private GameStateManager gameStateManager;
 
     void Start()
     {
+        player1Lives = maxLives;
+        player2Lives = maxLives;
+
+        if (livesUI != null)
+        {
+            livesUI.SetLives(1, player1Lives);
+            livesUI.SetLives(2, player2Lives);
+        }
+        
         gameStateManager = GameStateManager.Instance;
         SpawnPlayers();
+        
+        
+    }
+    
+    public void ResetPlayerLives()
+    {
+        player1Lives = maxLives;
+        player2Lives = maxLives;
+
+        if (livesUI != null)
+        {
+            livesUI.SetLives(1, player1Lives);
+            livesUI.SetLives(2, player2Lives);
+        }
     }
 
     public void SpawnPlayers()
@@ -115,12 +141,18 @@ public class MultiplayerManager : MonoBehaviour
 
     void RegisterDeath(int playerNumber, GameObject playerObject)
     {
-        if (playerNumber == 1) player1Deaths++;
-        else player2Deaths++;
+        if (playerNumber == 1) player1Lives--;
+        else player2Lives--;
 
-        if (player1Deaths >= maxDeaths || player2Deaths >= maxDeaths)
+        if (livesUI != null)
         {
-            Debug.Log("🚨 GAME OVER");
+            livesUI.SetLives(1, player1Lives);
+            livesUI.SetLives(2, player2Lives);
+        }
+
+        if (player1Lives <= 0 || player2Lives <= 0)
+        {
+            Debug.Log("GAME OVER");
             gameStateManager?.ShowGameOverScreen();
         }
         else

@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [Header("Health Settings")]
+    // Health Settings
     public float currentHealth;
     public float maxHealth;
 
-    [Header("References")]
+    // References
     public PlayerController controller;
     public bool isPlayer;
 
     private GameStateManager gameStateManager;
     private bool isDead = false;
 
-    // ✅ Declare the death event
+    // Declare the death event
     public event Action<GameObject> OnDeath;
 
     void Start()
@@ -33,6 +33,7 @@ public class Health : MonoBehaviour
         }
     }
 
+    
     public void TakeDamage(float amount, Pawn source = null)
     {
         if (isDead) return;
@@ -58,16 +59,28 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            // If the tank is a player, notify the player script to fire OnDeath
-            if (isPlayer)
+            int killerPlayerNum = 0;
+
+            // Try to determine which player caused the damage
+            if (source != null)
             {
+                if (source.controller is Player1Test) killerPlayerNum = 1;
+                else if (source.controller is Player2Test) killerPlayerNum = 2;
+            }
+
+            // If the tank is a player, notify their script
+            {
+                
+
                 if (TryGetComponent<Player1Test>(out var p1)) p1.Die();
                 else if (TryGetComponent<Player2Test>(out var p2)) p2.Die();
-            }
-            else
-            {
+
+                // Give score to killer for killing a player
+                if (killerPlayerNum > 0)
+                    GameStateManager.Instance?.AddScore(killerPlayerNum, 300); // or 500 etc
+                
                 // AI or others
-                Die(source);
+                Die(source, killerPlayerNum); // Updated to include player who did the kill
             }
         }
     }
@@ -98,15 +111,40 @@ public class Health : MonoBehaviour
         {
             OnDeath?.Invoke(gameObject);
         }
-
+        
+        
         Destroy(gameObject);
     }
     
-    public void Die(Pawn source)
+    public void Die(Pawn source, int killedByPlayerNum = 0)
     {
-        // Optional: use 'source' for tracking who caused the death
         Debug.Log($"{gameObject.name} was killed by {(source != null ? source.name : "Unknown")}");
 
-        Die(); // Call the no-arg version
+        int scoreToGive = 0;
+
+        // Determine score based on AI type
+        if (TryGetComponent<TheJerk>(out _)) scoreToGive = 150;
+        else if (TryGetComponent<ScrewThis>(out _)) scoreToGive = 100;
+        else if (TryGetComponent<CouchPotato>(out _)) scoreToGive = 50;
+        else if (TryGetComponent<ThePacifist>(out _)) scoreToGive = 25;
+        else scoreToGive = 100; // fallback if not AI type
+
+        // Determine which player killed it
+        if (source != null)
+        {
+            Player1Test p1 = source.GetComponent<Player1Test>();
+            Player2Test p2 = source.GetComponent<Player2Test>();
+
+            if (p1 != null)
+            {
+                gameStateManager.AddScore(1, scoreToGive);
+            }
+            else if (p2 != null)
+            {
+                gameStateManager.AddScore(2, scoreToGive);
+            }
+        }
+
+        Die(); // call the original
     }
 }

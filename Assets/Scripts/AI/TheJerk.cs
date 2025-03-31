@@ -1,37 +1,55 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class TheJerk : AIController
 {
-    public override void Start()
+    public override void Update()
     {
-        base.Start(); // Call the base class Start() method
-        TargetPlayerOne(); // Automatically select the nearest target when spawned
+        base.Update();
 
-        // EnsureTheJerk has NavMeshAgent
-        if (navAgent == null)
+        if (target == null)
         {
-            Debug.LogError(gameObject.name + " is missing a NavMeshAgent!");
-            return;
+            FindPlayerTarget();
         }
 
-        // Immediately start chasing if a target exists
         if (target != null)
         {
-            ChangeState(AIState.Chase);
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+
+            if (distance <= attackDistance)
+            {
+                currentState = AIState.Attack;
+            }
+            else
+            {
+                currentState = AIState.Chase;
+            }
+        }
+        else
+        {
+            currentState = AIState.Patrol;
         }
     }
 
-    public override void ProcessInputs()
+    private void FindPlayerTarget()
     {
-        if (target == null)
+        if (GameManager.Instance == null || GameManager.Instance.players == null) return;
+
+        float closest = Mathf.Infinity;
+        GameObject closestTarget = null;
+
+        foreach (var player in GameManager.Instance.players)
         {
-            TargetPlayerOne(); // Try to find the player again
+            if (player != null && player.pawn != null)
+            {
+                float dist = Vector3.Distance(transform.position, player.pawn.transform.position);
+                if (dist < closest)
+                {
+                    closest = dist;
+                    closestTarget = player.pawn.gameObject;
+                }
+            }
         }
 
-        if (target != null && navAgent != null)
-        {
-            navAgent.SetDestination(target.transform.position); // Move toward the player
-        }
+        target = closestTarget;
     }
 }

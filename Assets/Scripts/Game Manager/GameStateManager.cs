@@ -30,6 +30,13 @@ public class GameStateManager : MonoBehaviour
     public GameState currentState;
     private GameManager gameManager;
     private MultiplayerManager multiplayerManager; // MultiplayerManager Reference
+    
+    // Score
+    public TMP_Text player1ScoreText;
+    public TMP_Text player2ScoreText;
+
+    private int player1Score = 0;
+    private int player2Score = 0;
 
     private void Awake()
     {
@@ -63,6 +70,31 @@ public class GameStateManager : MonoBehaviour
         GameStateManager.Instance.ChangeState(GameState.Gameplay);
         ChangeState(GameState.TitleScreen);
         Time.timeScale = 1;
+        UpdateScoreUI(1);
+        UpdateScoreUI(2);
+    }
+    
+    public void AddScore(int playerNumber, int points)
+    {
+        if (playerNumber == 1)
+        {
+            player1Score += points;
+            UpdateScoreUI(1);
+        }
+        else if (playerNumber == 2)
+        {
+            player2Score += points;
+            UpdateScoreUI(2);
+        }
+    }
+
+    private void UpdateScoreUI(int playerNumber)
+    {
+        if (playerNumber == 1 && player1ScoreText != null)
+            player1ScoreText.text = "P1 Score: " + player1Score.ToString();
+    
+        if (playerNumber == 2 && player2ScoreText != null)
+            player2ScoreText.text = "P2 Score: " + player2Score.ToString();
     }
 
     private void DeactivateAllStates()
@@ -156,6 +188,9 @@ public class GameStateManager : MonoBehaviour
 
         // Apply the correct camera settings in MultiplayerManager
         multiplayerManager.isSplitScreen = isSplitScreenEnabled;
+        
+        // Reset Lives before game starts
+        multiplayerManager.ResetPlayerLives();
 
         // Set to Gameplay
         ChangeState(GameState.Gameplay); 

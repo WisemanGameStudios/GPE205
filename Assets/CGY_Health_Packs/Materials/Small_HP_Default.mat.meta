@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6ad8845bc3fcb264a85f79334bb418a4
+timeCreated: 1506845992
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101877
+  packageName: Health Packs
+  packageVersion: 1.0
+  assetPath: Assets/CGY_Health_Packs/Materials/Small_HP_Default.mat
+  uploadId: 252205
